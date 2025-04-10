@@ -11,7 +11,7 @@ import os
 load_dotenv()
 
 # model_path = os.getenv("LLM_MODEL_PATH", "./models/finetuned_model/roberta-base-squad2")
-model_path = "./models/finetuned_model/roberta-base-squad2/"
+model_path = "./models/cpu_model/"
 
 print(f"Loading model from {model_path}...")
 

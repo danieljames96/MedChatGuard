@@ -1,7 +1,11 @@
 import streamlit as st
-from core.pipeline_qa import run_pipeline
+from core.pipeline_seq2seq import run_pipeline
 import asyncio
 import sys
+import os
+
+os.environ["STREAMLIT_WATCH_USE_POLLING"] = "true"
+os.environ["STREAMLIT_DISABLE_WATCHDOG_WARNINGS"] = "true"
 
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

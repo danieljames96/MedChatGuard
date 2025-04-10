@@ -2,19 +2,11 @@
 Conditions: Diabetes, Hypertension, Hypertriglyceridemia (disorder), Chronic kidney disease stage 1 (disorder), Diabetic renal disease (disorder).
 Medications: Hydrochlorothiazide 12.5 MG, insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin], Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet.
 Encounters: General examination of patient (procedure), Encounter for check up (procedure), Encounter for problem, Urgent care clinic (procedure), Emergency Encounter.
-2: Patient: Augustine565 Bruen238, Age: 47, Gender: M.
-Conditions: Prediabetes, Chronic sinusitis (disorder), Diabetes, Hypertriglyceridemia (disorder), Anemia (disorder).
-Medications: Acetaminophen 325 MG Oral Tablet, insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin].
-Encounters: General examination of patient (procedure), Encounter for symptom, Encounter for check up (procedure), Urgent care clinic (procedure), Emergency Encounter.
-3: Patient: Kelly223 Christiansen251, Age: 59, Gender: M.
-Conditions: Hypertension, Prediabetes, Anemia (disorder), Diabetes, Hyperglycemia (disorder).
-Medications: Atenolol 50 MG / Chlorthalidone 25 MG Oral Tablet, 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet, insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin].
-Encounters: General examination of patient (procedure), Hypertension follow-up encounter, Encounter for check up (procedure), Encounter for symptom, Encounter for problem.
-4: Patient: Kendal125 Bartoletti50, Age: 51, Gender: F.
+2: Patient: Donovan745 Kiehn525, Age: 40, Gender: M.
+Conditions: Hypertension, Prediabetes, Diabetes, Anemia (disorder), Hypertriglyceridemia (disorder).
+Medications: amLODIPine 5 MG / Hydrochlorothiazide 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet, insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin], Meperidine Hydrochloride 50 MG Oral Tablet, Acetaminophen 325 MG Oral Tablet, Acetaminophen 325 MG / Oxycodone Hydrochloride 5 MG Oral Tablet.
+Encounters: Encounter for check up (procedure), General examination of patient (procedure), Hypertension follow-up encounter, Encounter for problem, Urgent care clinic (procedure).
+3: Patient: Kendal125 Bartoletti50, Age: 51, Gender: F.
 Conditions: Diabetes, Diabetic retinopathy associated with type II diabetes mellitus (disorder), Hypertriglyceridemia (disorder), Metabolic syndrome X (disorder), Anemia (disorder).
 Medications: insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin], Cefuroxime 250 MG Oral Tablet, Acetaminophen 325 MG / HYDROcodone Bitartrate 7.5 MG Oral Tablet, Ibuprofen 200 MG Oral Tablet, Meperidine Hydrochloride 50 MG Oral Tablet.
 Encounters: General examination of patient (procedure), Encounter for check up (procedure), Patient encounter procedure, Emergency room admission (procedure), Urgent care clinic (procedure).
-5: Patient: Rene434 Schinner682, Age: 63, Gender: F.
-Conditions: Diabetes, Anemia (disorder), Hypertriglyceridemia (disorder), Metabolic syndrome X (disorder), Neuropathy due to type 2 diabetes mellitus (disorder).
-Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin human  isophane 70 UNT/ML / Regular Insulin  Human 30 UNT/ML Injectable Suspension [Humulin], Naproxen sodium 220 MG Oral Tablet, Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet.
-Encounters: General examination of patient (procedure), Encounter for check up (procedure), Encounter Inpatient, Urgent care clinic (procedure), Encounter for problem.
