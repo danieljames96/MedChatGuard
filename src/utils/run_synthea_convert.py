@@ -7,7 +7,8 @@ import time
 from src.finetune.prepare_data import main as prepare_main
 
 # === CONFIG ===
-SYNTHEA_JAR = r"D:\\Development\\Project_Repositories\\MedChatGuard\\synthea-with-dependencies.jar"# "./synthea-with-dependencies.jar"  # Ensure this is in your root dir
+SYNTHEA_JAR = r"D:\\Development\\Project_Repositories\\MedChatGuard\\synthea-with-dependencies.jar"
+# SYNTHEA_JAR = "./synthea-with-dependencies.jar"  # Ensure this is in your root dir
 OUTPUT_DIR = "./output/csv/"                       # Synthea default CSV output
 DATA_DIR = "./data/"                           # Where to move processed CSVs
 NUM_PATIENTS = 100                               # Change as needed
