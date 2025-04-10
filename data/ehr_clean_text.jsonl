@@ -1,5 +1,0 @@
-{
-  "instruction": "What medications has the patient been prescribed?",
-  "input": "Patient has Type 2 Diabetes...",
-  "output": "Metformin 500mg"
-}

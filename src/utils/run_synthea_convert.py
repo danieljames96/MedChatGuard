@@ -4,25 +4,32 @@ import os
 import sys
 import time
 
-from src.finetune.prepare_data import main as prepare_main
+from src.utils.prepare_data import main as prepare_main
 
 # === CONFIG ===
-SYNTHEA_JAR = r"D:\\Development\\Project_Repositories\\MedChatGuard\\synthea-with-dependencies.jar"
-# SYNTHEA_JAR = "./synthea-with-dependencies.jar"  # Ensure this is in your root dir
+# SYNTHEA_JAR = r"D:\\Development\\Project_Repositories\\MedChatGuard\\synthea-with-dependencies.jar"
+SYNTHEA_JAR = "./synthea-with-dependencies.jar"  # Ensure this is in your root dir
 OUTPUT_DIR = "./output/csv/"                       # Synthea default CSV output
-DATA_DIR = "./data/"                           # Where to move processed CSVs
+DATA_DIR = "./data/finetune/"                           # Where to move processed CSVs
 NUM_PATIENTS = 100                               # Change as needed
 SEED = 42                                        # Fixed for reproducibility
 
 # === STEP 1: Run Synthea ===
 def run_synthea():
     print("[INFO] Running Synthea to generate synthetic EHR data...")
-    print(f"[DEBUG] java -jar {SYNTHEA_JAR} -p {NUM_PATIENTS} --seed {SEED}")
+    
+    if os.path.exists("./output/fhir"):
+        shutil.rmtree("./output/fhir")
+    if os.path.exists("./output/metadata"):
+        shutil.rmtree("./output/metadata")
+    
     try:
         result = subprocess.run([
             "java", "-jar", SYNTHEA_JAR,
             "-p", str(NUM_PATIENTS),
-            "--seed", str(SEED)
+            "--seed", str(SEED),
+            "--exporter.fhir.export=false",
+            "--exporter.csv.export=true",
         ], check=True, capture_output=True, text=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:

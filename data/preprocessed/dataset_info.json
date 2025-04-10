@@ -1,0 +1,52 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "json",
+  "dataset_size": 72159,
+  "description": "",
+  "download_checksums": {
+    "D:/Development/Project_Repositories/MedChatGuard/./data/finetune/ehr_clean_text.jsonl": {
+      "num_bytes": 76355,
+      "checksum": null
+    }
+  },
+  "download_size": 76355,
+  "features": {
+    "prompt": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "input_ids": {
+      "feature": {
+        "dtype": "int32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "attention_mask": {
+      "feature": {
+        "dtype": "int8",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 148514,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 72159,
+      "num_examples": 110,
+      "dataset_name": "json"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
