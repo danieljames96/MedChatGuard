@@ -14,16 +14,16 @@ def log_evaluation(query, prompt, response, retrieved_chunks, model_name="flan-t
         mlflow.log_param("num_chunks", len(retrieved_chunks))
 
         # Log prompt and response artifacts
-        with open("prompt.txt", "w") as f:
+        with open("./log/prompt.txt", "w") as f:
             f.write(prompt)
         mlflow.log_artifact("prompt.txt")
 
-        with open("response.txt", "w") as f:
+        with open("./log/response.txt", "w") as f:
             f.write(response)
         mlflow.log_artifact("response.txt")
 
         # Log sample retrieved text for traceability
-        with open("retrieved_chunks.txt", "w") as f:
+        with open("./log/retrieved_chunks.txt", "w") as f:
             for chunk in retrieved_chunks:
                 f.write(f"{chunk['rank']}: {chunk['summary']}\n")
         mlflow.log_artifact("retrieved_chunks.txt")

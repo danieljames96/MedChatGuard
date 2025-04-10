@@ -1,5 +1,10 @@
 import streamlit as st
-from src.core.pipeline import run_pipeline
+from core.pipeline import run_pipeline
+import asyncio
+import sys
+
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 st.set_page_config(page_title="MedChatGuard", layout="wide")
 st.title("🩺 MedChatGuard - Clinical Query Assistant")

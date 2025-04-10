@@ -1,10 +1,9 @@
-from src.core.retrieval import retrieve_relevant_docs
-from src.utils.guardrails import apply_guardrails
-from src.utils.evaluation import log_evaluation
+from core.retrieval import retrieve_relevant_docs
+from utils.guardrails import apply_guardrails
+from utils.evaluation import log_evaluation
 from transformers import pipeline
 from dotenv import load_dotenv
-from langchain_community.llms import HuggingFaceHub, HuggingFacePipeline
-from langchain.prompts import PromptTemplate
+from langchain_huggingface import HuggingFacePipeline
 # from langchain_groq import ChatGroq
 # from langchain_core.prompts import ChatPromptTemplate
 # from langchain_core.output_parsers import JsonOutputParser
@@ -44,7 +43,7 @@ def run_pipeline(query):
     prompt = build_prompt(chunks, query)
 
     # Step 3: Query the LLM
-    response = llm(prompt)
+    response = llm.invoke(prompt)
 
     # Step 4: Apply guardrails
     guardrail_result = apply_guardrails(response)
