@@ -1,20 +1,36 @@
-from core.retrieval import retrieve_relevant_docs
-from utils.guardrails import apply_guardrails
-from utils.evaluation import log_evaluation
+from src.core.retrieval import retrieve_relevant_docs
+from src.utils.guardrails import apply_guardrails
+from src.utils.evaluation import log_evaluation
 from transformers import pipeline
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFacePipeline
-# from langchain_groq import ChatGroq
-# from langchain_core.prompts import ChatPromptTemplate
-# from langchain_core.output_parsers import JsonOutputParser
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import os
 
 # Load environment variables
 load_dotenv()
 
-# Setup LLM (e.g., HuggingFace Flan-T5)
-# llm = HuggingFaceHub(repo_id="google/flan-t5-base", model_kwargs={"temperature": 0.7, "max_length": 512})
-generator = pipeline("text2text-generation", model="google/flan-t5-base", max_length=512)
+# model_path = os.getenv("LLM_MODEL_PATH", "./models/cpu_model/")
+model_path = "./models/cpu_model/"
+
+print(f"Loading model from {model_path}...")
+
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(
+    model_path,
+    torch_dtype="float32"
+)
+
+generator = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    max_length=2048,
+    do_sample=True,
+    temperature=0.2,
+    # top_p=0.9,
+)
+
 llm = HuggingFacePipeline(pipeline=generator)
 
 # Prompt template
