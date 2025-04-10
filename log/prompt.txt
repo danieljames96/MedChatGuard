@@ -1,0 +1,7 @@
+
+You are a clinical assistant. Based on the following patient records and the user query, provide a concise and medically relevant answer.
+
+User Query:
+What treatment do I need as a diabetic?
+
+Answer:

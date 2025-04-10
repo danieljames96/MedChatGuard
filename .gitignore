@@ -174,3 +174,7 @@ cython_debug/
 .pypirc
 
 models/*
+data/*
+output/*
+notebooks/roberta-qa-checkpoints
+notebooks/flan-small-checkpoints

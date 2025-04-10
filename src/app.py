@@ -1,5 +1,5 @@
 import streamlit as st
-from core.pipeline import run_pipeline
+from core.pipeline_qa import run_pipeline
 import asyncio
 import sys
 

@@ -1,44 +1,34 @@
-from src.core.retrieval import retrieve_relevant_docs
-from src.utils.guardrails import apply_guardrails
-from src.utils.evaluation import log_evaluation
+from core.retrieval import retrieve_relevant_docs
+from utils.guardrails import apply_guardrails
+from utils.evaluation import log_evaluation
 from transformers import pipeline
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFacePipeline
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import os
 
 # Load environment variables
 load_dotenv()
 
-# model_path = os.getenv("LLM_MODEL_PATH", "./models/cpu_model/")
-model_path = "./models/cpu_model/"
+# model_path = os.getenv("LLM_MODEL_PATH", "./models/finetuned_model/roberta-base-squad2")
+model_path = "./models/finetuned_model/roberta-base-squad2/"
 
 print(f"Loading model from {model_path}...")
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
-model = AutoModelForCausalLM.from_pretrained(
+model = AutoModelForQuestionAnswering.from_pretrained(
     model_path,
     torch_dtype="float32"
 )
 
-generator = pipeline(
-    "text-generation",
+qa_pipeline = pipeline(
+    "question-answering",
     model=model,
-    tokenizer=tokenizer,
-    max_length=2048,
-    do_sample=True,
-    temperature=0.2,
-    # top_p=0.9,
+    tokenizer=tokenizer
 )
-
-llm = HuggingFacePipeline(pipeline=generator)
 
 # Prompt template
 PROMPT_TEMPLATE = """
 You are a clinical assistant. Based on the following patient records and the user query, provide a concise and medically relevant answer.
-
-Patient Record:
-{context}
 
 User Query:
 {query}
@@ -58,8 +48,13 @@ def run_pipeline(query):
     # Step 2: Build the prompt
     prompt = build_prompt(chunks, query)
 
-    # Step 3: Query the LLM
-    response = llm.invoke(prompt)
+    # Step 3: Query the QA Model
+    response_raw  = qa_pipeline(
+        question=query,
+        context=prompt  # The RAG context will serve as the document
+    )
+    response = response_raw ["answer"]
+
 
     # Step 4: Apply guardrails
     guardrail_result = apply_guardrails(response)
