@@ -127,9 +127,21 @@ python -m src.utils.preprocess_dataset
 
 ---
 
+## MLFlow Server
+
+mlflow server \
+  --backend-store-uri file:///D:/Development/Project_Repositories/MedChatGuard/mlruns \
+  --default-artifact-root file:///D:/Development/Project_Repositories/MedChatGuard/mlruns/artifacts \
+  --host 127.0.0.1 --port 5000
+
 ## ▶️ Run the App
 ```bash
 streamlit run src/app.py
+```
+
+To evaluate:  
+```bash
+python ./src/evaluate.py
 ```
 
 To view MLflow logs:

@@ -3,7 +3,7 @@ import mlflow
 from datetime import datetime
 
 # Configure MLflow
-mlflow.set_tracking_uri("file:../mlruns")  # Local tracking URI
+mlflow.set_tracking_uri("http://127.0.0.1:5000")  # Local tracking URI
 mlflow.set_experiment("MedChatGuard-RAG-LLM")
 
 def log_evaluation(query, prompt, response, retrieved_chunks, model_name="flan-t5-base"):
