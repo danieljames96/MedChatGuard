@@ -128,11 +128,12 @@ python -m src.utils.preprocess_dataset
 ---
 
 ## MLFlow Server
-
+```bash
 mlflow server \
   --backend-store-uri file:///D:/Development/Project_Repositories/MedChatGuard/mlruns \
   --default-artifact-root file:///D:/Development/Project_Repositories/MedChatGuard/mlruns/artifacts \
   --host 127.0.0.1 --port 5000
+```
 
 ## ▶️ Run the App
 ```bash
