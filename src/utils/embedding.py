@@ -6,7 +6,7 @@ import faiss
 import pickle
 
 # Configurations
-DATA_DIR = "./data/rag/"
+DATA_DIR = "./data/rag_docs/"
 OUTPUT_DIR = "./embeddings/"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 FAISS_INDEX_FILE = os.path.join(OUTPUT_DIR, "ehr_faiss_index.faiss")

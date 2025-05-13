@@ -11,7 +11,7 @@ from src.utils.prepare_data import main as prepare_main
 SYNTHEA_JAR = "./synthea-with-dependencies.jar"  # Ensure this is in your root directory
 OUTPUT_DIR = "./output/csv/"                      # Synthea default CSV output
 FINETUNE_DIR = "./data/finetune/"                 # Where to move processed CSVs for fine-tuning
-RAG_DIR = "./data/rag/"                           # Where to move CSVs for RAG
+RAG_DIR = "./data/rag_docs/"                           # Where to move CSVs for RAG
 NUM_PATIENTS = 500                                # Change as needed
 SEED = 42                                         # Fixed for reproducibility
 
@@ -58,7 +58,7 @@ def convert_to_jsonl():
 # === MAIN (Argument Parsing) ===
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["finetune", "rag"], help="Processing mode: 'finetune' (generate JSONL for fine-tuning) or 'rag' (copy CSVs to data/rag/)")
+    parser.add_argument("mode", choices=["finetune", "rag"], help="Processing mode: 'finetune' (generate JSONL for fine-tuning) or 'rag' (copy CSVs to data/rag_docs/)")
     args = parser.parse_args()
 
     start = time.time()
@@ -70,7 +70,7 @@ def main():
         convert_to_jsonl()
     elif args.mode == "rag":
         move_csv_output(RAG_DIR)
-        print("[INFO] RAG mode: CSV files copied to data/rag/ directory.")
+        print("[INFO] RAG mode: CSV files copied to data/rag_docs/ directory.")
 
     print(f"[ALL DONE] Total time: {time.time() - start:.2f}s")
 
