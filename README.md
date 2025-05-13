@@ -1,106 +1,111 @@
 # 🏥 MedChatGuard
 
-A secure, clinically-aware RAG assistant powered by **LangGraph** and **Groq**, designed to answer medical questions over synthetic EHR data. It integrates retrieval, LLM inference, guardrails, and evaluation—all built using lightweight, open-source tools.
+A secure, clinically-aware, multi-turn RAG assistant powered by **LangGraph** and **Groq**, designed to answer medical questions over synthetic EHR data. It integrates retrieval, LLM inference, memory, guardrails, external validation, and experiment tracking with MLflow.
 
 ---
 
 ## 🚀 Features (Updated)
 
-- ✅ LangGraph-powered RAG flow with stateful, modular graph nodes
-- ✅ FAISS-based document retrieval using Sentence Transformers
-- ✅ Structured prompting + Groq-backed LLM via `ChatGroq`
-- ✅ Safety guardrails to catch speculative or unstructured responses
-- ✅ MLflow integration for run logging and evaluation
-- ✅ Streamlit interface for real-time clinical query interaction
-- ✅ Synthetic EHR data generation using Synthea
-- ✅ Fully CPU-compatible setup for local testing
+* ✅ LangGraph-based RAG pipeline with memory and agent orchestration
+* ✅ FAISS-based retrieval using Sentence Transformers
+* ✅ Multi-turn conversation support (contextual prompts)
+* ✅ Groq-hosted LLM (LLaMA-3 / Mixtral) via LangChain
+* ✅ Guardrails for speculative/hallucinatory checks
+* ✅ Medical plausibility validation agent
+* ✅ LLM-based reranker for retrieved context
+* ✅ MLflow logging with full JSON state tracking
+* ✅ Streamlit interface for real-time interaction
+* ✅ Compatible with synthetic EHR data from Synthea
+
+---
+
+## 🧠 Fine-Tuned Model History
+
+### 🔬 Gemma 3B / 4B (via Unsloth + QLoRA)
+
+* Strong accuracy on clinical instructions
+* Poor deployability in CPU environments
+
+### 🧪 RoBERTa (deepset/roberta-base-squad2)
+
+* Failed on long-context and structured EHR prompts
+
+### 🧠 FLAN-T5-Small (Instruction-Tuned)
+
+* Best trade-off for speed and interpretability in lightweight settings
+
+📌 *These experiments led to the adoption of Groq-hosted LLMs for scalable inference with minimal latency.*
 
 ---
 
 ## 📁 Project Structure
 
 ```
-
 src/
 ├── agents/
-│   ├── rag_graph.py         # LangGraph pipeline
+│   └── rag_graph.py           # LangGraph pipeline
 ├── core/
-│   ├── retrieval.py         # FAISS-based retrieval logic
+│   └── retrieval.py           # FAISS-based retrieval
 ├── utils/
-│   ├── guardrails.py        # Format/speculation checks
-│   ├── evaluation.py        # MLflow logging
-├── app.py                   # Streamlit frontend
-└── data/                    # Files used in RAG pipeline
-
-````
-
----
-
-## ⚙️ Installation
-
-```bash
-git clone https://github.com/danieljames96/medchatguard.git
-cd medchatguard
-python -m venv venv
-source venv/bin/activate  # or .\venv\Scripts\activate on Windows
-pip install -r requirements.txt
-````
-
-Set up your environment:
-
-```bash
-# .env
-GROQ_API_KEY=your_groq_key_here
+│   ├── guardrails.py          # Speculation and hallucination checks
+│   ├── ranker.py              # LLM-based reranker
+│   ├── validator.py           # Medical plausibility agent
+│   └── mlflow_logger.py       # Full-state logging to MLflow
+├── app.py                     # Streamlit UI
+└── data/rag_docs/             # EHR document chunks
 ```
 
 ---
 
-## ▶️ Run the App
+## ▶️ How to Run
 
 ```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Set environment
+export GROQ_API_KEY=your_key
+export MLFLOW_TRACKING_URI=http://localhost:5000
+
+# Start MLflow server
+./start_mlflow.sh
+
+# Run Streamlit app
 streamlit run src/app.py
 ```
 
-This launches the MedChatGuard UI. Enter clinical questions to receive grounded answers from synthetic records.
+---
+
+## 💬 Streamlit Usage
+
+* Enter clinical questions like:
+
+  * "Summarize recent diagnoses"
+  * "What medications are prescribed for hypertension?"
+* Conversation memory tracks each Q\&A
+* Expand history to view all prior turns
 
 ---
 
-## 🧬 Generate Synthetic EHR Data
+## 🧪 Synthetic EHR Generation
 
 1. Download Synthea: [https://github.com/synthetichealth/synthea](https://github.com/synthetichealth/synthea)
-2. Place `synthea-with-dependencies.jar` in the project root
-3. Generate records:
+2. Run converter to generate `.txt`/`.md` summaries:
 
 ```bash
 python -m src.utils.run_synthea_convert rag
 ```
 
-4. Place processed `.txt` or `.md` records in `data/rag_docs/`
+3. Place files in `data/rag_docs/`
 
 ---
 
-## 🧠 How It Works
+## 📈 MLflow Logging
 
-The RAG pipeline is defined as a LangGraph flow:
+* Tracks query, response, guardrails, validation, retrieved docs
+* Logs full RAG state as a JSON artifact
 
-1. **Retriever**: Queries FAISS for top-k matching patient records
-2. **Prompt Builder**: Constructs a structured instruction using summaries
-3. **LLM Node**: Calls Groq (Mixtral) via LangChain
-4. **Guardrails**: Checks speculative or unstructured language
-5. **Return**: Outputs the result + metadata
-
----
-
-## 🧪 Logging with MLflow
-
-Each run logs:
-
-* Prompt + query
-* Response
-* Guardrail results
-* Retrieved document scores and summaries
-
-To launch MLflow UI:
+Launch MLflow dashboard:
 
 ```bash
 mlflow ui
@@ -108,22 +113,24 @@ mlflow ui
 
 ---
 
-## 📈 Sample Clinical Queries
+## 🧑‍⚕️ Agents in LangGraph
 
-| Query                                       | Expected Output                        |
-| ------------------------------------------- | -------------------------------------- |
-| What meds is the patient taking?            | List of drugs like metformin, etc.     |
-| Has the patient been diagnosed with asthma? | Checks condition summary               |
-| Summarize recent hospital visits            | Outputs compact overview of encounters |
-| Are there any potential side effects?       | Guardrails flag speculative answers    |
+1. **Retriever**: FAISS retrieval based on dense embedding
+2. **Ranker**: Reorders chunks by LLM judgment
+3. **Prompt Builder**: Assembles full context prompt
+4. **LLM**: Groq-powered response generation
+5. **Guardrails**: Flags speculative/hallucinated outputs
+6. **Validator**: Validates response against known medical norms
+7. **Memory Tracker**: Appends to session history
 
 ---
 
-## 📌 Future Enhancements
+## 🧩 Future Directions
 
-* Reranking via LLM-based relevance scoring
-* Human feedback-based fine-tuning
-* Multi-turn memory via LangGraph state management
+* Retrieval augmentation from real-world guidelines
+* Integration with structured EHR (FHIR)
+* Streaming token-by-token responses
+* Role-based interaction (doctor, nurse, admin)
 
 ---
 
