@@ -43,13 +43,13 @@ A secure, clinically-aware, multi-turn RAG assistant powered by **LangGraph** an
 ```
 src/
 ├── agents/
-│   └── rag_graph.py           # LangGraph pipeline
+│   ├── rag_graph.py           # LangGraph pipeline
+│   ├── ranker.py              # LLM-based reranker
+│   └── validator.py           # Medical plausibility agent
 ├── core/
 │   └── retrieval.py           # FAISS-based retrieval
 ├── utils/
 │   ├── guardrails.py          # Speculation and hallucination checks
-│   ├── ranker.py              # LLM-based reranker
-│   ├── validator.py           # Medical plausibility agent
 │   └── mlflow_logger.py       # Full-state logging to MLflow
 ├── app.py                     # Streamlit UI
 └── data/rag_docs/             # EHR document chunks
@@ -60,10 +60,11 @@ src/
 ## ▶️ How to Run
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies using Poetry
+poetry init  
+poetry install
 
-# Set environment
+# Create a .env file in root directory with the below variables
 export GROQ_API_KEY=your_key
 export MLFLOW_TRACKING_URI=http://localhost:5000
 
