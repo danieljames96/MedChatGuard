@@ -1,5 +1,3 @@
-# rag_graph.py - LangGraph-powered RAG pipeline for MedChatGuard with enhanced ranking and validation
-
 import os
 from typing import TypedDict, List, Dict, Union
 from langgraph.graph import StateGraph, END
@@ -28,9 +26,10 @@ class RAGState(TypedDict):
     response: Union[str, AIMessage]
     guardrails: Dict[str, Union[str, bool]]
     validation: Dict[str, Union[str, bool]]
+    history: List[Dict[str, str]]  # For multi-turn memory
 
 
-# Prompt generation
+# Prompt generation with memory
 
 def build_prompt_node():
     template = """
@@ -47,8 +46,13 @@ def build_prompt_node():
     prompt = PromptTemplate.from_template(template)
 
     def combine(inputs: RAGState):
+        history = inputs.get("history", [])
+        history_str = "\n\n".join([
+            f"Q: {turn['query']}\nA: {turn['response']}" for turn in history
+        ])
         summaries = "\n\n".join([chunk['summary'] for chunk in inputs['ranked_chunks']])
-        inputs["prompt"] = prompt.format(context=summaries, query=inputs['query'])
+        full_context = f"{history_str}\n\nRecent Records:\n{summaries}" if history_str else summaries
+        inputs["prompt"] = prompt.format(context=full_context, query=inputs['query'])
         return inputs
 
     return RunnableLambda(combine)
@@ -56,7 +60,7 @@ def build_prompt_node():
 
 # Enhanced guardrail logic
 
-def guardrail_check(text: str) -> Dict[str, Union[str, bool]]:
+def revised_guardrail_check(text: str) -> Dict[str, Union[str, bool]]:
     speculative_terms = ["might", "could", "possibly", "likely", "may"]
     speculation_flag = any(term in text.lower() for term in speculative_terms)
     hallucination_flag = any(term in text.lower() for term in ["clearly not true", "doesn't match", "not in patient record"])
@@ -101,7 +105,7 @@ def build_rag_graph():
 
     graph.add_node("guardrails_check", RunnableLambda(lambda state: {
         **state,
-        "guardrails": guardrail_check(
+        "guardrails": revised_guardrail_check(
             state["response"].content if hasattr(state["response"], "content") else state["response"]
         )
     }))
@@ -111,6 +115,14 @@ def build_rag_graph():
         "validation": validate_response_with_criteria(state["response"], state["query"])
     }))
 
+    graph.add_node("history_updater", RunnableLambda(lambda state: {
+        **state,
+        "history": state.get("history", []) + [{
+            "query": state["query"],
+            "response": state["response"].content if hasattr(state["response"], "content") else state["response"]
+        }]
+    }))
+
     # Flow
     graph.set_entry_point("retriever")
     graph.add_edge("retriever", "ranker")
@@ -118,13 +130,15 @@ def build_rag_graph():
     graph.add_edge("prompt_builder", "llm")
     graph.add_edge("llm", "guardrails_check")
     graph.add_edge("guardrails_check", "validator_check")
-    graph.add_edge("validator_check", END)
+    graph.add_edge("validator_check", "history_updater")
+    graph.add_edge("history_updater", END)
 
     return graph.compile()
 
 
 rag_graph = build_rag_graph()
 
-def run_rag_pipeline(user_query: str) -> RAGState:
+def run_rag_pipeline(user_query: str, prev_state: RAGState = None) -> RAGState:
     with mlflow.start_run():
-        return rag_graph.invoke({"query": user_query})
+        initial_state = {"query": user_query, "history": prev_state.get("history", []) if prev_state else []}
+        return rag_graph.invoke(initial_state)
